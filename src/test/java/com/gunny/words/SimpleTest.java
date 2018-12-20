@@ -38,7 +38,7 @@ public class SimpleTest {
         List<Character> input = Arrays.asList('a');
         int numberWanted = 1;
         List<List<Character>> answer = Arrays.asList(Arrays.asList('a'));
-        List<List<Character>> actual = Words.Pick(input, numberWanted);
+        List<List<Character>> actual = Words.pick(input, numberWanted);
         assertThat(actual, is(answer));
     }
     @Test
@@ -46,7 +46,7 @@ public class SimpleTest {
         List<Character> input = Arrays.asList('a', 'b');
         int numberWanted = 1;
         List<List<Character>> answer = Arrays.asList(Arrays.asList('a'), Arrays.asList('b'));
-        List<List<Character>> actual = Words.Pick(input, numberWanted);
+        List<List<Character>> actual = Words.pick(input, numberWanted);
         assertThat(actual, is(answer));
     }
     @Test
@@ -54,7 +54,7 @@ public class SimpleTest {
         List<Character> input = Arrays.asList('a', 'b', 'c');
         int numberWanted = 1;
         List<List<Character>> answer = Arrays.asList(Arrays.asList('a'), Arrays.asList('b'), Arrays.asList('c'));
-        List<List<Character>> actual = Words.Pick(input, numberWanted);
+        List<List<Character>> actual = Words.pick(input, numberWanted);
         assertThat(actual, is(answer));
     }
     @Test
@@ -62,7 +62,15 @@ public class SimpleTest {
         List<Character> input = Arrays.asList('a', 'b', 'c');
         int numberWanted = 2;
         List<List<Character>> answer = Arrays.asList(Arrays.asList('a', 'b'), Arrays.asList('a', 'c'), Arrays.asList('b', 'c'));
-        List<List<Character>> actual = Words.Pick(input, numberWanted);
+        List<List<Character>> actual = Words.pick(input, numberWanted);
+        assertThat(actual, is(answer));
+    }
+    @Test
+    public void FourPickTwo() {
+        List<Character> input = Arrays.asList('a', 'b', 'c', 'd');
+        int numberWanted = 2;
+        List<List<Character>> answer = Arrays.asList(Arrays.asList('a', 'b'), Arrays.asList('a', 'c'), Arrays.asList('a', 'd'), Arrays.asList('b', 'c'), Arrays.asList('b', 'd'), Arrays.asList('c', 'd'));
+        List<List<Character>> actual = Words.pick(input, numberWanted);
         assertThat(actual, is(answer));
     }
 }

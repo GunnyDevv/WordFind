@@ -4,34 +4,22 @@ import java.util.*;
 
 public class Words {
 
-    public static List<List<Character>> Pick(List<Character> list, int numberWanted) {
+    public static List<List<Character>> pick(List<Character> list, int numberWanted) {
         List<List<Character>> output = new ArrayList<>();
-
-        if(numberWanted == 1) {
-            for(int x = 0; x < list.size(); x++) {
-                List<Character> one = Arrays.asList(list.get(x));
-                output.add(one);
+        if(numberWanted == 0) {
+            output.add(new ArrayList<>(1));
+            return output;
+        }
+        int lockedIndex = 0;
+        while(lockedIndex <= list.size()-numberWanted) {
+            Character lockedChar = list.get(lockedIndex++);
+            List<List<Character>> subListPick = pick(list.subList(lockedIndex, list.size()), numberWanted - 1);
+            for (int subListIndex = 0; subListIndex < subListPick.size(); subListIndex++) {
+                List<Character> onePick = subListPick.get(subListIndex);
+                onePick.add(0, lockedChar);
             }
+            output.addAll(subListPick);
         }
-        if(numberWanted == 2) {
-            for(int x = 0; x < ) {
-
-            }
-
-        }
-        if(numberWanted == 3) {
-
-        }
-        if(numberWanted == 4) {
-
-        }
-        if(numberWanted == 5) {
-
-        }
-        if(numberWanted == 6) {
-
-        }
-
         return output;
     }
 
