@@ -1,10 +1,12 @@
 package com.gunny.words;
 
 import org.junit.jupiter.api.Test;
+
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -12,65 +14,120 @@ public class SimpleTest {
 
     @Test
     public void testSimple() {
-        List<String> words = Arrays.asList("ear", "are", "era", "arc");
-        List<Character> letters = Arrays.asList('e', 'a', 'r');
-        List<String> answer = Arrays.asList("ear", "are", "era");
+        List<String> words = asList("ear", "are", "era", "arc");
+        List<Character> letters = asList('e', 'a', 'r');
+        List<String> answer = asList("ear", "are", "era");
         assertThat(Words.wordsThatMatch(words, letters), is(answer));
 
     }
     @Test
+    public void testDoubleLetter() {
+        List<String> words = asList("bee");
+        List<Character> letters = asList('b', 'e', 'e');
+        List<String> answer = asList("bee");
+        assertThat(Words.wordsThatMatch(words, letters), is(answer));
+
+    }
+
+
+    @Test
     public void testWordSplit() {
         String input = "hemi";
-        Collection<Character> hemiLetters = Words.Split(input);
-        Collection<Character> answer = Arrays.asList('h', 'e', 'm', 'i');
+        Collection<Character> hemiLetters = Words.split(input);
+        Collection<Character> answer = asList('h', 'e', 'm', 'i');
         assertThat(hemiLetters, is (answer));
     }
     @Test
-    public void testLegth() {
-        List<String> words = Arrays.asList("ear", "are", "era", "bear");
-        List<Character> letters = Arrays.asList('e', 'a', 'r');
-        List<String> answer = Arrays.asList("ear", "are", "era");
+    public void testLength() {
+        List<String> words = asList("ear", "are", "era", "bear");
+        List<Character> letters = asList('e', 'a', 'r');
+        List<String> answer = asList("ear", "are", "era");
         assertThat(Words.wordsThatMatch(words, letters), is(answer));
 
     }
     @Test
     public void onePickOne() {
-        List<Character> input = Arrays.asList('a');
+        List<Character> input = asList('a');
         int numberWanted = 1;
-        List<List<Character>> answer = Arrays.asList(Arrays.asList('a'));
-        List<List<Character>> actual = Words.pick(input, numberWanted);
-        assertThat(actual, is(answer));
+        Character [][] answer = {
+                {'a'},
+        };
+        assertPick(input, numberWanted, arrayToList(answer));
     }
     @Test
     public void twoPickOne() {
-        List<Character> input = Arrays.asList('a', 'b');
+        List<Character> input = asList('a', 'b');
         int numberWanted = 1;
-        List<List<Character>> answer = Arrays.asList(Arrays.asList('a'), Arrays.asList('b'));
-        List<List<Character>> actual = Words.pick(input, numberWanted);
-        assertThat(actual, is(answer));
+        List<List<Character>> answer = asList(asList('a'), asList('b'));
+        assertPick(input, numberWanted, answer);
     }
     @Test
     public void ThreePickOne() {
-        List<Character> input = Arrays.asList('a', 'b', 'c');
+        List<Character> input = asList('a', 'b', 'c');
         int numberWanted = 1;
-        List<List<Character>> answer = Arrays.asList(Arrays.asList('a'), Arrays.asList('b'), Arrays.asList('c'));
-        List<List<Character>> actual = Words.pick(input, numberWanted);
-        assertThat(actual, is(answer));
+        Character [][] answer = {
+                {'a'},
+                {'b'},
+                {'c'},
+        };
+        assertPick(input, numberWanted, arrayToList(answer));
     }
     @Test
     public void ThreePickTwo() {
-        List<Character> input = Arrays.asList('a', 'b', 'c');
+        List<Character> input = asList('a', 'b', 'c');
         int numberWanted = 2;
-        List<List<Character>> answer = Arrays.asList(Arrays.asList('a', 'b'), Arrays.asList('a', 'c'), Arrays.asList('b', 'c'));
-        List<List<Character>> actual = Words.pick(input, numberWanted);
-        assertThat(actual, is(answer));
+        Character [][] answer = {
+                {'a', 'b'},
+                {'a', 'c'},
+                {'b', 'c'},
+        };
+        assertPick(input, numberWanted, arrayToList(answer));
     }
     @Test
     public void FourPickTwo() {
-        List<Character> input = Arrays.asList('a', 'b', 'c', 'd');
+        List<Character> input = asList('a', 'b', 'c', 'd');
         int numberWanted = 2;
-        List<List<Character>> answer = Arrays.asList(Arrays.asList('a', 'b'), Arrays.asList('a', 'c'), Arrays.asList('a', 'd'), Arrays.asList('b', 'c'), Arrays.asList('b', 'd'), Arrays.asList('c', 'd'));
+        Character [][] answer = {
+                {'a', 'b'},
+                {'a', 'c'},
+                {'a', 'd'},
+                {'b', 'c'},
+                {'b', 'd'},
+                {'c', 'd'},
+        };
+        assertPick(input, numberWanted, arrayToList(answer));
+    }
+
+    @Test
+    public void FivePickThree() {
+        List<Character> input = asList('a', 'b', 'c', 'd', 'e');
+        int numberWanted = 3;
+        Character [][] answer = {
+                {'a', 'b', 'c'},
+                {'a', 'b', 'd'},
+                {'a', 'b', 'e'},
+                {'a', 'c', 'd'},
+                {'a', 'c', 'e'},
+                {'a', 'd', 'e'},
+                {'b', 'c', 'd'},
+                {'b', 'c', 'e'},
+                {'b', 'd', 'e'},
+                {'c', 'd', 'e'},
+
+        };
+        assertPick(input, numberWanted, arrayToList(answer));
+    }
+
+    private void assertPick(List<Character> input, int numberWanted, List<List<Character>> lists) {
         List<List<Character>> actual = Words.pick(input, numberWanted);
-        assertThat(actual, is(answer));
+        assertThat(actual, is(lists));
+    }
+
+    private List<List<Character>> arrayToList(Character [][] array) {
+        List<List<Character>> answer = new ArrayList<>(array.length);
+        for(int arrayIdx = 0; arrayIdx < array.length; arrayIdx++) {
+            answer.add(asList(array[arrayIdx]));
+        }
+        return answer;
     }
 }
