@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,8 +29,13 @@ public class SimpleTest {
         assertThat(Words.wordsThatMatch(words, letters), is(answer));
 
     }
+    @Test
+    public void testDoubleLetterSameLength() {
+        List<String> words = asList("beer");
+        List<Character> letters = asList('b', 'e', 'r', 'r');
+        assertTrue(Words.wordsThatMatch(words, letters).isEmpty());
 
-
+    }
     @Test
     public void testWordSplit() {
         String input = "hemi";
@@ -44,6 +50,13 @@ public class SimpleTest {
         List<String> answer = asList("ear", "are", "era");
         assertThat(Words.wordsThatMatch(words, letters), is(answer));
 
+    }
+    @Test
+    public void testMatchDifferentLength() {
+        List<Character> letters = asList('a', 'b', 'c', 'e', 'r');
+        List<String> words = asList("a", "ace", "fear", "bear", "piggy");
+        List<String> answer = asList("a", "ace", "bear");
+        assertThat(Words.wordsThatMatch(words, letters), is(answer));
     }
     @Test
     public void onePickOne() {

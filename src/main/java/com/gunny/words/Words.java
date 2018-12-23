@@ -23,8 +23,8 @@ public class Words {
         return output;
     }
 
-    public static Collection<Character> split(String word) {
-        Collection<Character> list = new ArrayList();
+    public static List<Character> split(String word) {
+        List<Character> list = new ArrayList();
         for(int i = 0; i < word.length(); i++) {
             list.add(word.charAt(i));
         }
@@ -38,9 +38,16 @@ public class Words {
             for (int potentialWordCharacterIndex = 0; potentialWordCharacterIndex < potentialWordCharacters.size(); potentialWordCharacterIndex++) {
                 List<Character> current = potentialWordCharacters.get(potentialWordCharacterIndex);
                 for (int x = 0; x < inputWords.size(); x++) {
-                    Collection<Character> wordLetters = split(inputWords.get(x));
+                    List<Character> wordLetters = split(inputWords.get(x));
                     if(wordLetters.size() == current.size()) {
-                        wordLetters.removeAll(current);
+                        for (int inputCharacterIndex = 0; inputCharacterIndex < current.size(); inputCharacterIndex++) {
+                            for (int wordLetterIndex = 0; wordLetterIndex < wordLetters.size(); wordLetterIndex++) {
+                                if(current.get(inputCharacterIndex) == wordLetters.get(wordLetterIndex)) {
+                                    wordLetters.remove(wordLetterIndex);
+                                    break;
+                                }
+                            }
+                        }
                         if (wordLetters.isEmpty()) {
                             answerWords.add(inputWords.get(x));
                         }
