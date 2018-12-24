@@ -1,37 +1,12 @@
 package com.gunny.words;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import static com.gunny.words.WordUtils.*;
 
-public class Words {
-
-    public static List<List<Character>> pick(List<Character> list, int numberWanted) {
-        List<List<Character>> output = new ArrayList<>();
-        if(numberWanted == 0) {
-            output.add(new ArrayList<>(1));
-            return output;
-        }
-        int lockedIndex = 0;
-        while(lockedIndex <= list.size()-numberWanted) {
-            Character lockedChar = list.get(lockedIndex++);
-            List<List<Character>> subListPick = pick(list.subList(lockedIndex, list.size()), numberWanted - 1);
-            for (int subListIndex = 0; subListIndex < subListPick.size(); subListIndex++) {
-                List<Character> onePick = subListPick.get(subListIndex);
-                onePick.add(0, lockedChar);
-            }
-            output.addAll(subListPick);
-        }
-        return output;
-    }
-
-    public static List<Character> split(String word) {
-        List<Character> list = new ArrayList();
-        for(int i = 0; i < word.length(); i++) {
-            list.add(word.charAt(i));
-        }
-        return list;
-
-    }
-    static public List<String> wordsThatMatch(List<String> inputWords, List<Character> inputCharacters) {
+public class AllWordsFromCharactersForStrategy implements AllWordsFromCharacters {
+    @Override
+    public List<String> execute(List<String> inputWords, List<Character> inputCharacters) {
         List<String> answerWords = new ArrayList<>();
         for(int targetWordLength = 1; targetWordLength <= inputCharacters.size(); targetWordLength++) {
             List<List<Character>> potentialWordCharacters = pick(inputCharacters, targetWordLength);

@@ -2,64 +2,25 @@ package com.gunny.words;
 
 import org.junit.jupiter.api.Test;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class SimpleTest {
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-    @Test
-    public void testSimple() {
-        List<String> words = asList("ear", "are", "era", "arc");
-        List<Character> letters = asList('e', 'a', 'r');
-        List<String> answer = asList("ear", "are", "era");
-        assertThat(Words.wordsThatMatch(words, letters), is(answer));
+public class TestWordUtils {
 
-    }
-    @Test
-    public void testDoubleLetter() {
-        List<String> words = asList("bee");
-        List<Character> letters = asList('b', 'e', 'e');
-        List<String> answer = asList("bee");
-        assertThat(Words.wordsThatMatch(words, letters), is(answer));
-
-    }
-    @Test
-    public void testDoubleLetterSameLength() {
-        List<String> words = asList("beer");
-        List<Character> letters = asList('b', 'e', 'r', 'r');
-        assertTrue(Words.wordsThatMatch(words, letters).isEmpty());
-
-    }
     @Test
     public void testWordSplit() {
         String input = "hemi";
-        Collection<Character> hemiLetters = Words.split(input);
+        Collection<Character> hemiLetters = WordUtils.split(input);
         Collection<Character> answer = asList('h', 'e', 'm', 'i');
         assertThat(hemiLetters, is (answer));
     }
     @Test
-    public void testLength() {
-        List<String> words = asList("ear", "are", "era", "bear");
-        List<Character> letters = asList('e', 'a', 'r');
-        List<String> answer = asList("ear", "are", "era");
-        assertThat(Words.wordsThatMatch(words, letters), is(answer));
-
-    }
-    @Test
-    public void testMatchDifferentLength() {
-        List<Character> letters = asList('a', 'b', 'c', 'e', 'r');
-        List<String> words = asList("a", "ace", "fear", "bear", "piggy");
-        List<String> answer = asList("a", "ace", "bear");
-        assertThat(Words.wordsThatMatch(words, letters), is(answer));
-    }
-    @Test
-    public void onePickOne() {
+    public void testOnePickOne() {
         List<Character> input = asList('a');
         int numberWanted = 1;
         Character [][] answer = {
@@ -68,14 +29,14 @@ public class SimpleTest {
         assertPick(input, numberWanted, arrayToList(answer));
     }
     @Test
-    public void twoPickOne() {
+    public void testTwoPickOne() {
         List<Character> input = asList('a', 'b');
         int numberWanted = 1;
         List<List<Character>> answer = asList(asList('a'), asList('b'));
         assertPick(input, numberWanted, answer);
     }
     @Test
-    public void ThreePickOne() {
+    public void testThreePickOne() {
         List<Character> input = asList('a', 'b', 'c');
         int numberWanted = 1;
         Character [][] answer = {
@@ -86,7 +47,7 @@ public class SimpleTest {
         assertPick(input, numberWanted, arrayToList(answer));
     }
     @Test
-    public void ThreePickTwo() {
+    public void testThreePickTwo() {
         List<Character> input = asList('a', 'b', 'c');
         int numberWanted = 2;
         Character [][] answer = {
@@ -97,7 +58,7 @@ public class SimpleTest {
         assertPick(input, numberWanted, arrayToList(answer));
     }
     @Test
-    public void FourPickTwo() {
+    public void testFourPickTwo() {
         List<Character> input = asList('a', 'b', 'c', 'd');
         int numberWanted = 2;
         Character [][] answer = {
@@ -112,7 +73,7 @@ public class SimpleTest {
     }
 
     @Test
-    public void FivePickThree() {
+    public void testFivePickThree() {
         List<Character> input = asList('a', 'b', 'c', 'd', 'e');
         int numberWanted = 3;
         Character [][] answer = {
@@ -130,9 +91,8 @@ public class SimpleTest {
         };
         assertPick(input, numberWanted, arrayToList(answer));
     }
-
     private void assertPick(List<Character> input, int numberWanted, List<List<Character>> lists) {
-        List<List<Character>> actual = Words.pick(input, numberWanted);
+        List<List<Character>> actual = WordUtils.pick(input, numberWanted);
         assertThat(actual, is(lists));
     }
 
