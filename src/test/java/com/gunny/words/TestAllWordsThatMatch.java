@@ -49,5 +49,17 @@ public class TestAllWordsThatMatch {
         List<String> answer = asList("a", "ace", "bear");
         assertThat(obj.execute(words, letters), is(answer));
     }
+
+    @Test
+    public void testNoDuplicates() {
+        List<Character> letters = asList('e','o','n','c','j','c');
+        List<String> words = asList("no", "on");
+        List<String> answer = asList("no", "on");
+        assertThat(obj.execute(words, letters), is(answer));
+    }
+    @Test
+    public void testRandomLetter() {
+        InputCharacterReader test = new InputCharacterReaderRandomStringFor();
+    }
 }
 
