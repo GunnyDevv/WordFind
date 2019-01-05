@@ -1,6 +1,7 @@
 package com.gunny.words;
 
 import java.io.BufferedReader;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class InputWordReaderFileReader implements InputWordReader {
@@ -10,6 +11,6 @@ public class InputWordReaderFileReader implements InputWordReader {
     }
     @Override
     public Stream<String> stream() {
-        return source.lines();
+        return source.lines().collect(Collectors.toSet()).parallelStream();
     }
 }

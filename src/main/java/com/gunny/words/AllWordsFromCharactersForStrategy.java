@@ -1,13 +1,15 @@
 package com.gunny.words;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import static com.gunny.words.WordUtils.*;
 
-public class AllWordsFromCharactersForStrategy implements AllWordsFromCharacters {
+public class  AllWordsFromCharactersForStrategy implements AllWordsFromCharacters {
     @Override
-    public List<String> execute(List<String> inputWords, List<Character> inputCharacters) {
-        List<String> answerWords = new ArrayList<>();
+    public Set<String> execute(List<String> inputWords, List<Character> inputCharacters) {
+        Set<String> answerWords = new HashSet<>();
         for(int targetWordLength = 1; targetWordLength <= inputCharacters.size(); targetWordLength++) {
             List<List<Character>> potentialWordCharacters = pick(inputCharacters, targetWordLength);
             for (int potentialWordCharacterIndex = 0; potentialWordCharacterIndex < potentialWordCharacters.size(); potentialWordCharacterIndex++) {
