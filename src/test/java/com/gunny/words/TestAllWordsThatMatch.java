@@ -1,6 +1,6 @@
 package com.gunny.words;
 
-import org.junit.jupiter.api.BeforeEach;
+import com.gunny.util.stream.ImmutableCollector;
 import org.junit.jupiter.api.Test;
 
 import static java.util.Arrays.asList;
@@ -9,57 +9,55 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 
 public class TestAllWordsThatMatch {
-    AllWordsFromCharacters obj;
-
-    @BeforeEach
-    public void setup() {
-        obj = new AllWordsFromCharactersForStrategy();
-    }
-
     @Test
     public void testNoMatch_OnWordThatIsRightLength_ButWrongLetters() {
-        List<String> words = asList("ear", "are", "era", "arc");
-        List<Character> letters = asList('e', 'a', 'r');
-        List<String> answer = asList("ear", "are", "era");
 
-        assertThat(obj.execute(words, letters), is(answer));
+        Set<String> words = asSet("ear", "are", "era", "arc");
+        List<Character> letters = asList('e', 'a', 'r');
+        Set<String> answer = asSet("ear", "are", "era");
+
+        assertThat(new AllWordsFromCharactersForStrategy(words).execute(letters), is(answer));
 
     }
     @Test
     public void testMatchRepeatedLetter() {
-        List<String> words = asList("bee");
+        Set<String> words = asSet("bee");
         List<Character> letters = asList('b', 'e', 'e');
-        List<String> answer = asList("bee");
-        assertThat(obj.execute(words, letters), is(answer));
+        Set<String> answer = asSet("bee");
+        assertThat(new AllWordsFromCharactersForStrategy(words).execute(letters), is(answer));
 
     }
     @Test
     public void testNoMatchRepeatedLetterSameLength() {
-        List<String> words = asList("beer");
+        Set<String> words = asSet("beer");
         List<Character> letters = asList('b', 'e', 'r', 'r');
-        assertTrue(obj.execute(words, letters).isEmpty());
+        assertTrue(new AllWordsFromCharactersForStrategy(words).execute(letters).isEmpty());
 
     }
     @Test
     public void testMatchDifferentLength() {
         List<Character> letters = asList('a', 'b', 'c', 'e', 'r');
-        List<String> words = asList("a", "ace", "fear", "bear", "piggy");
-        List<String> answer = asList("a", "ace", "bear");
-        assertThat(obj.execute(words, letters), is(answer));
+        Set<String> words = asSet("a", "ace", "fear", "bear", "piggy");
+        Set<String> answer = asSet("a", "ace", "bear");
+        assertThat(new AllWordsFromCharactersForStrategy(words).execute(letters), is(answer));
     }
 
     @Test
     public void testNoDuplicates() {
         List<Character> letters = asList('e','o','n','c','j','c');
-        List<String> words = asList("no", "on");
-        List<String> answer = asList("no", "on");
-        assertThat(obj.execute(words, letters), is(answer));
+        Set<String> words = asSet("no", "on");
+        Set<String> answer = asSet("no", "on");
+        assertThat(new AllWordsFromCharactersForStrategy(words).execute(letters), is(answer));
     }
-    @Test
-    public void testRandomLetter() {
-        InputCharacterReader test = new InputCharacterReaderRandomStringFor();
+
+    static <T> Set<T> asSet(T... values) {
+        return Stream.of(values).collect(ImmutableCollector.toImmutableSet());
     }
+
+
 }
 

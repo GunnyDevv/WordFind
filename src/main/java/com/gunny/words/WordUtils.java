@@ -8,7 +8,7 @@ public class WordUtils {
     public static List<List<Character>> pick(List<Character> list, int numberWanted) {
         List<List<Character>> output = new ArrayList<>();
         if(numberWanted == 0) {
-            output.add(new ArrayList<>(1));
+            output.add(new ArrayList<>());
             return output;
         }
         int lockedIndex = 0;
