@@ -13,45 +13,60 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public class TestAllWordsThatMatch {
+    AllWordsFromCharactersForStrategy matcher;
+    List<Character> matchableCharacters;
+
     @Test
     public void testNoMatch_OnWordThatIsRightLength_ButWrongLetters() {
-
-        Set<String> words = asSet("ear", "are", "era", "arc");
-        List<Character> letters = asList('e', 'a', 'r');
-        Set<String> answer = asSet("ear", "are", "era");
-
-        assertThat(new AllWordsFromCharactersForStrategy(words).execute(letters), is(answer));
-
+        withWords("ear", "are", "era", "arc").
+        andLetters('e', 'a', 'r').
+        assertMatchesAre("ear", "are", "era");
     }
+
     @Test
     public void testMatchRepeatedLetter() {
-        Set<String> words = asSet("bee");
-        List<Character> letters = asList('b', 'e', 'e');
-        Set<String> answer = asSet("bee");
-        assertThat(new AllWordsFromCharactersForStrategy(words).execute(letters), is(answer));
-
+        withWords("bee").
+        andLetters('b', 'e', 'e').
+        assertMatchesAre("bee");
     }
+
     @Test
     public void testNoMatchRepeatedLetterSameLength() {
-        Set<String> words = asSet("beer");
-        List<Character> letters = asList('b', 'e', 'r', 'r');
-        assertTrue(new AllWordsFromCharactersForStrategy(words).execute(letters).isEmpty());
+        withWords("beer").
+        andLetters('b', 'e', 'r', 'r').
+        assertNoMatches();
 
     }
     @Test
     public void testMatchDifferentLength() {
-        List<Character> letters = asList('a', 'b', 'c', 'e', 'r');
-        Set<String> words = asSet("a", "ace", "fear", "bear", "piggy");
-        Set<String> answer = asSet("a", "ace", "bear");
-        assertThat(new AllWordsFromCharactersForStrategy(words).execute(letters), is(answer));
+        withWords("a", "ace", "fear", "bear", "piggy").
+        andLetters('a', 'b', 'c', 'e', 'r').
+        assertMatchesAre("a", "ace", "bear");
     }
 
     @Test
     public void testNoDuplicates() {
-        List<Character> letters = asList('e','o','n','c','j','c');
-        Set<String> words = asSet("no", "on");
-        Set<String> answer = asSet("no", "on");
-        assertThat(new AllWordsFromCharactersForStrategy(words).execute(letters), is(answer));
+        withWords("no", "on").
+        andLetters('e','o','n','c','j','c').
+        assertMatchesAre("no", "on");
+    }
+
+    TestAllWordsThatMatch withWords(String... words) {
+        matcher = new AllWordsFromCharactersForStrategy(asSet(words));
+        return this;
+    }
+
+    TestAllWordsThatMatch andLetters(Character... letters) {
+        matchableCharacters = asList(letters);
+        return this;
+    }
+
+    void assertMatchesAre(String... matches) {
+        assertThat(matcher.execute(matchableCharacters), is(asSet(matches)));
+    }
+
+    void assertNoMatches() {
+        assertTrue(matcher.execute(matchableCharacters).isEmpty());
     }
 
     static <T> Set<T> asSet(T... values) {
