@@ -20,12 +20,16 @@ public class Main {
         Set<String> inputWords = get5000MostPopularWords(s -> s.length() >= 3);
         AllWordsFromCharacters allWordsFromCharacters = new AllWordsFromCharactersForStrategy(inputWords);
 
+        long totalFound =
         inputWords // use inputWords to drive search for matching sets, note that inputWords is also used at the data to match against
                 .parallelStream() // Yes!
                 .map(WordUtils::split)// map every string into a List<Characters>
                 .map(allWordsFromCharacters::execute)// map every List<Characters> into Set<String> of matching words
                 .filter(stringSet -> stringSet.size() >= 3) // drop all lists that are less than three elements, can't make a crossword otherwise
-                .forEach(words -> System.out.println(words)); // print result
+                .count();
+                //.forEach(words -> System.out.println(words)); // print result
+
+        System.out.println(totalFound);
     }
 
     /**
