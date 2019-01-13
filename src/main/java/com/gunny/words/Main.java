@@ -1,36 +1,46 @@
 package com.gunny.words;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        /*
-        Get a List of input words to use as the seed for matching
-         */
-        InputWordReader inputWordReader = new InputWordReaderFileReader(new BufferedReader(new FileReader("5000-MostPopularEnglishWords.txt")));
-        Set<String> inputWords = inputWordReader.stream().collect(Collectors.toSet());
+        new Main().findAllWordSets();
+    }
 
-        /*
-        Get a lambda that can convert a List<Character> into a Set of matching strings
-        This could be better by making a class that holds the WordSet and is always ready to act on it
-        First refactor the existing class to take the wordSet as a constructor parameter
-         */
+    private void findAllWordSets() throws FileNotFoundException {
+        Set<String> inputWords = get5000MostPopularWords(s -> s.length() >= 3);
         AllWordsFromCharacters allWordsFromCharacters = new AllWordsFromCharactersForStrategy(inputWords);
-        Function<List<Character>, Set<String>> charactersToMatchingWords = l -> allWordsFromCharacters.execute(l);
 
-//        InputCharacterReader inputCharacterReader = new InputCharacterReaderInputStream(new BufferedReader(new FileReader("5000-MostPopularEnglishWords.txt")));
-        inputWords.parallelStream()
-                .filter(s -> s.length() >= 3)// length of string is > 3
+        inputWords // use inputWords to drive search for matching sets, note that inputWords is also used at the data to match against
+                .parallelStream() // Yes!
                 .map(WordUtils::split)// map every string into a List<Characters>
-                .map(charactersToMatchingWords)// map every List<Characters> into Set<String> of matching words
-                .map(strings -> strings.stream().filter(s -> s.length() >= 3).collect(Collectors.toSet()))// check each String in the set and drop anything that is less than 3 characters
-                .filter(strings -> strings.size() >= 3) // drop all lists that are less than three elements
+                .map(allWordsFromCharacters::execute)// map every List<Characters> into Set<String> of matching words
+                .filter(stringSet -> stringSet.size() >= 3) // drop all lists that are less than three elements, can't make a crossword otherwise
                 .forEach(words -> System.out.println(words)); // print result
     }
 
+    /**
+     * Reads about 5000 words from a text file that was produced from some kind of google project.
+     * There are duplicates which are removed on conversion to a Set.
+     *
+     * @return a Set of Strings of these words, < 5000 due to duplicates
+     * @throws FileNotFoundException
+     */
+    private Set<String> get5000MostPopularWords(Predicate<String> stringFilter) throws FileNotFoundException {
+        InputStream wordIS = this.getClass().getResourceAsStream("5000-MostPopularEnglishWords.txt"); // not the best file since it has dups and words that are one and two characters
+        BufferedReader reader = new BufferedReader(new InputStreamReader(wordIS));
+
+        return reader.lines()
+                     .filter(stringFilter)
+                     .collect(Collectors.toSet());
+    }
 }
